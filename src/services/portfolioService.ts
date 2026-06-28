@@ -24,7 +24,6 @@ export const getAllPortfolioItems = async (onlyActive: boolean = false): Promise
   }
   
   const snapshot = await getDocs(q);
-  
   return snapshot.docs.map(doc => {
     const data = doc.data() as any;
     return {
@@ -41,7 +40,7 @@ export const getAllPortfolioItems = async (onlyActive: boolean = false): Promise
   });
 };
 
-export const addPortfolioItem = async (data: Omit<PortfolioItem, 'id' | 'createdAt'>) => {
+export const addPortfolioItem = async (data: any) => {
   try {
     const portfolioDoc = {
       title: data.title,
