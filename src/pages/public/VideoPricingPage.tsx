@@ -12,7 +12,7 @@ import {
   Clock,
   ArrowRight 
 } from 'lucide-react';
-import ScrollReveal from '../../components/shared/ScrollReveal'; // অ্যানিমেশন কম্পোনেন্ট
+import ScrollReveal from '../../components/shared/ScrollReveal';
 
 const VideoPricingPage = () => {
   const [packages, setPackages] = useState<PricingPackage[]>([]);
@@ -41,10 +41,9 @@ const VideoPricingPage = () => {
         <meta name="description" content="Affordable and professional video editing pricing for reels, TikToks, and commercials. Choose your perfect plan." />
       </Helmet>
 
-      {/* মেইন কন্টেইনারে ডার্ক থিম সেট করা হলো */}
       <div className="bg-[#070b19] text-white min-h-screen pt-32 pb-24 font-sans relative overflow-hidden">
         
-        {/* ডার্ক নিয়ন গ্লোয়িং অরবিস (Glowing Orbs) ব্যাকগ্রাউন্ড */}
+        {/* Background Neon Orbs */}
         <div className="absolute top-[-10%] right-1/4 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[150px] pointer-events-none"></div>
         <div className="absolute bottom-[-10%] left-1/4 w-[600px] h-[600px] bg-primary-500/10 rounded-full blur-[150px] pointer-events-none"></div>
 
@@ -81,17 +80,17 @@ const VideoPricingPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto items-stretch">
               {packages.map((pkg, index) => (
                 <ScrollReveal key={pkg.id} direction="up" delay={index * 150}>
-                  {/* গ্লাস-মরফিজম (Glassmorphism) ডার্ক কার্ড ডিজাইন */}
+                  {/* ওপরে বেশি প্যাডিং (pt-12) দিয়ে কন্টেন্টকে নিচে নামিয়ে নেওয়া হয়েছে */}
                   <div 
-                    className={`bg-slate-900/40 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 border transition-all duration-300 flex flex-col justify-between h-full relative ${
+                    className={`bg-slate-900/40 backdrop-blur-xl rounded-[2.5rem] pt-12 pb-8 px-8 border transition-all duration-300 flex flex-col justify-between h-full relative ${
                       pkg.isPopular 
                       ? 'border-purple-500 shadow-2xl shadow-purple-500/10 lg:-translate-y-4 ring-4 ring-purple-500/5' 
                       : 'border-white/5 hover:border-purple-500/30 shadow-xl hover:shadow-2xl hover:shadow-purple-500/5 hover:-translate-y-2'
                     }`}
                   >
-                    {/* Floating Custom Badge */}
+                    {/* Floating Custom Badge exactly on the top border */}
                     {pkg.isPopular && (
-                      <div className="absolute -top-4.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-primary-600 text-white px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-purple-500/30">
+                      <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-primary-600 text-white px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-purple-500/30 whitespace-nowrap z-10">
                         Recommended
                       </div>
                     )}
