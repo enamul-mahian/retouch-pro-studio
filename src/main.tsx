@@ -4,14 +4,14 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
 import { SettingsProvider } from './components/contexts/SettingsContext';
-import App from './App.tsx';
+import App from './App';
 import './index.css';
 
-// React Quill এর 'findDOMNode is deprecated' ওয়ার্নিংটি হাইড করার জন্য কাস্টম লজিক
+// React Quill-এর 'findDOMNode is deprecated' ওয়ার্নিংটি হাইড করার লজিক
 const originalConsoleError = console.error;
 console.error = (...args: any[]) => {
   if (typeof args[0] === 'string' && args[0].includes('findDOMNode is deprecated')) {
-    return; // এই নির্দিষ্ট ওয়ার্নিংটি কনসোলে প্রিন্ট করবে না
+    return;
   }
   originalConsoleError(...args);
 };
