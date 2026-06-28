@@ -25,7 +25,7 @@ const Footer = () => {
   const copyrightText = settings?.copyrightText || `© ${currentYear} ${siteName}. All rights reserved.`;
 
   return (
-    <footer className="bg-white border-t border-slate-100 pt-16 pb-8">
+    <footer className="bg-white border-t border-slate-100 pt-16 pb-8 font-sans">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 mb-16">
           
@@ -97,14 +97,14 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 3: Popular Services */}
+          {/* Column 3: Popular Services (লিঙ্কগুলো মেইন সার্ভিস পেজে রিডাইরেক্ট করা হলো) */}
           <div>
             <h3 className="font-semibold text-slate-800 mb-6">Popular Services</h3>
             <ul className="flex flex-col gap-3.5 text-sm">
-              <li><Link to="/services/clipping-path" className="text-slate-500 hover:text-primary-600 transition-colors">Clipping Path</Link></li>
-              <li><Link to="/services/photo-retouching" className="text-slate-500 hover:text-primary-600 transition-colors">Photo Retouching</Link></li>
-              <li><Link to="/services/ecommerce-editing" className="text-slate-500 hover:text-primary-600 transition-colors">E-Commerce Editing</Link></li>
-              <li><Link to="/short-video-editing" className="text-slate-500 hover:text-primary-600 transition-colors">Short Video Editing</Link></li>
+              <li><Link to="/services" className="text-slate-500 hover:text-primary-600 transition-colors">Clipping Path</Link></li>
+              <li><Link to="/services" className="text-slate-500 hover:text-primary-600 transition-colors">Photo Retouching</Link></li>
+              <li><Link to="/services" className="text-slate-500 hover:text-primary-600 transition-colors">E-Commerce Editing</Link></li>
+              <li><Link to="/services" className="text-slate-500 hover:text-primary-600 transition-colors">Short Video Editing</Link></li>
               <li><Link to="/quote" className="text-primary-600 font-medium hover:text-primary-700 transition-colors">Get a Free Quote →</Link></li>
             </ul>
           </div>
