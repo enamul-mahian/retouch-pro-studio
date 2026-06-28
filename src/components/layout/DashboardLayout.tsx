@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink, Outlet, Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, Outlet } from 'react-router-dom'; // useNavigate এবং Outlet ইম্পোর্ট করা হলো
 import { 
   LayoutGrid, 
   FileText, 
@@ -8,10 +8,11 @@ import {
   CreditCard, 
   User, 
   LogOut,
-  Briefcase, // টাস্ক আইকন
-  ChevronRight,
-  Menu,
-  X
+  Briefcase, 
+  ChevronRight, 
+  Menu, 
+  X,
+  Globe 
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -29,14 +30,14 @@ const DashboardLayout = () => {
     { path: '/dashboard', label: 'Overview', icon: LayoutGrid, end: true },
     { path: '/dashboard/quotes', label: 'My Quotes', icon: FileText },
     { path: '/dashboard/orders', label: 'My Orders', icon: ShoppingBag },
-    { path: '/dashboard/tasks', label: 'My Tasks', icon: Briefcase }, // নতুন টিম টাস্ক মেনু
+    { path: '/dashboard/tasks', label: 'My Tasks', icon: Briefcase },
     { path: '/dashboard/files', label: 'My Files', icon: Folder },
     { path: '/dashboard/payments', label: 'Payments', icon: CreditCard },
     { path: '/dashboard/profile', label: 'Profile Settings', icon: User },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col lg:flex-row font-sans">
       
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:flex w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col sticky top-0 h-screen">
@@ -73,7 +74,15 @@ const DashboardLayout = () => {
           ))}
         </nav>
 
-        <div className="p-6 border-t border-slate-100 dark:border-slate-800">
+        {/* Bottom Section - View Site & Sign Out */}
+        <div className="p-6 border-t border-slate-100 dark:border-slate-800 space-y-2">
+          <Link 
+            to="/"
+            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+          >
+            <Globe size={20} className="text-primary-600" />
+            View Site
+          </Link>
           <button 
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl font-bold text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
@@ -94,7 +103,7 @@ const DashboardLayout = () => {
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-white dark:bg-slate-900 pt-20 px-6 animate-in slide-in-from-top-10">
+        <div className="lg:hidden fixed inset-0 z-50 bg-white dark:bg-slate-900 pt-20 px-6 animate-in slide-in-from-top-10 flex flex-col justify-between pb-8">
            <nav className="space-y-2">
               {menuItems.map((item) => (
                 <NavLink
@@ -107,10 +116,20 @@ const DashboardLayout = () => {
                   {item.label}
                 </NavLink>
               ))}
-              <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-4 rounded-xl font-bold text-red-500">
+           </nav>
+           
+           <div className="space-y-2 pt-4 border-t dark:border-slate-800">
+             <Link
+                to="/"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-3 px-4 py-4 rounded-xl font-bold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800"
+              >
+                <Globe size={20} className="text-primary-600" /> View Site
+              </Link>
+              <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-xl font-bold text-red-500 bg-red-50 dark:bg-red-950/20">
                 <LogOut size={20} /> Logout
               </button>
-           </nav>
+           </div>
         </div>
       )}
 

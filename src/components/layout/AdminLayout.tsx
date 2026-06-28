@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, Link } from 'react-router-dom';
 import { 
   LayoutGrid, 
   MessageSquare, 
@@ -12,7 +12,8 @@ import {
   FileText, 
   Settings, 
   Shield,
-  Briefcase
+  Briefcase,
+  Globe // নতুন আইকন
 } from 'lucide-react';
 
 const AdminLayout = () => {
@@ -20,7 +21,7 @@ const AdminLayout = () => {
     { path: '/admin', label: 'Dashboard', icon: LayoutGrid },
     { path: '/admin/quotes', label: 'Quote Requests', icon: MessageSquare },
     { path: '/admin/orders', label: 'Manage Orders', icon: ShoppingBag },
-    { path: '/admin/tasks', label: 'Task Board', icon: ClipboardList }, // নতুন মেনু যোগ করা হলো
+    { path: '/admin/tasks', label: 'Task Board', icon: ClipboardList },
     { path: '/admin/services', label: 'Services', icon: Box },
     { path: '/admin/portfolio', label: 'Portfolio', icon: Image },
     { path: '/admin/pricing', label: 'Pricing Packages', icon: Tag },
@@ -33,7 +34,7 @@ const AdminLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex font-sans">
       {/* Sidebar */}
       <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 hidden md:flex flex-col fixed inset-y-0 z-10">
         <div className="p-6">
@@ -41,7 +42,7 @@ const AdminLayout = () => {
           <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Retouch Pro Studio</p>
         </div>
 
-        <nav className="flex-1 px-4 pb-6 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-4 space-y-1 overflow-y-auto pb-4">
           {menuItems.map((item) => (
             <NavLink
               key={item.path}
@@ -60,6 +61,17 @@ const AdminLayout = () => {
             </NavLink>
           ))}
         </nav>
+
+        {/* Bottom Section - View Site Option */}
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800">
+          <Link
+            to="/"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all w-full"
+          >
+            <Globe size={20} className="text-primary-600 dark:text-primary-400" />
+            View Site
+          </Link>
+        </div>
       </aside>
 
       {/* Main Content */}
