@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy } from 'firebase/firestore';
 import { db } from '../../services/firebase';
-import FileUpload from '../../components/shared/FileUpload'; // আমাদের তৈরি করা কমন আপলোডার
+import FileUpload from '../../components/shared/FileUpload'; 
 import type { Service } from '../../types/service.types';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -62,7 +62,6 @@ const ManageServicesPage = () => {
     }
   };
 
-  // টাইটেল থেকে অটোমেটিক স্ল্যাগ (Slug) তৈরির লজিক
   const generateSlug = (text: string) => {
     return text
       .toLowerCase()
@@ -169,6 +168,36 @@ const ManageServicesPage = () => {
         <title>Manage Services | Admin Dashboard</title>
       </Helmet>
 
+      {/* কাস্টম সিএসএস স্টাইলব্লক - রিঅ্যাক্ট কুইল এডিটরের ডার্ক মোড কালার ফিক্স করার জন্য */}
+      <style>{`
+        .ql-editor {
+          color: #f8fafc !important; /* text-slate-50 (ডার্ক মোডে লেখার কালার সাদা) */
+          font-family: inherit;
+          font-size: 14px;
+        }
+        .dark .ql-toolbar {
+          background-color: #1e293b !important; /* bg-slate-800 */
+          border-color: #334155 !important; /* border-slate-700 */
+        }
+        .dark .ql-container {
+          border-color: #334155 !important; /* border-slate-700 */
+          background-color: #0f172a !important; /* bg-slate-900 */
+        }
+        .dark .ql-snow .ql-stroke {
+          stroke: #94a3b8 !important; /* slate-400 (আইকনের কালার হালকা করার জন্য) */
+        }
+        .dark .ql-snow .ql-fill {
+          fill: #94a3b8 !important;
+        }
+        .dark .ql-snow .ql-picker {
+          color: #94a3b8 !important;
+        }
+        .dark .ql-snow .ql-picker-options {
+          background-color: #1e293b !important;
+          border-color: #334155 !important;
+        }
+      `}</style>
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
@@ -185,7 +214,7 @@ const ManageServicesPage = () => {
             else setIsFormOpen(true);
           }}
           className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-bold transition-all ${
-            isFormOpen ? 'bg-slate-200 text-slate-700' : 'bg-primary-600 text-white shadow-lg'
+            isFormOpen ? 'bg-slate-200 text-slate-700' : 'bg-primary-600 text-white shadow-lg shadow-primary-200 dark:shadow-none'
           }`}
         >
           {isFormOpen ? <><X className="w-4 h-4" /> Cancel</> : <><Plus className="w-4 h-4" /> Add New Service</>}
@@ -207,17 +236,17 @@ const ManageServicesPage = () => {
                       type="text" required value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       placeholder="e.g. High-End Beauty Retouching"
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 outline-none"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none"
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 uppercase tracking-wider">Category</label>
                     <select
                       value={category} onChange={(e) => setCategory(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 outline-none"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none"
                     >
-                      <option value="Image Editing">Image Editing</option>
-                      <option value="Video Editing">Video Editing</option>
+                      <option value="Image Editing" className="bg-white dark:bg-slate-800">Image Editing</option>
+                      <option value="Video Editing" className="bg-white dark:bg-slate-800">Video Editing</option>
                     </select>
                   </div>
                 </div>
@@ -228,17 +257,17 @@ const ManageServicesPage = () => {
                     <input
                       type="number" step="0.01" required value={startingPrice}
                       onChange={(e) => setStartingPrice(parseFloat(e.target.value) || 0)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 outline-none"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none"
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 uppercase tracking-wider">Publish Status</label>
                     <select
                       value={status} onChange={(e) => setStatus(e.target.value as any)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 outline-none"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none"
                     >
-                      <option value="active">Active (Visible)</option>
-                      <option value="draft">Draft (Hidden)</option>
+                      <option value="active" className="bg-white dark:bg-slate-800">Active (Visible)</option>
+                      <option value="draft" className="bg-white dark:bg-slate-800">Draft (Hidden)</option>
                     </select>
                   </div>
                 </div>
@@ -249,7 +278,7 @@ const ManageServicesPage = () => {
                     type="text" required value={shortDescription}
                     onChange={(e) => setShortDescription(e.target.value)}
                     placeholder="Brief intro for service cards..."
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 outline-none"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none"
                   />
                 </div>
 
@@ -287,7 +316,6 @@ const ManageServicesPage = () => {
                     <FileUpload 
                       onUploadSuccess={(url) => {
                         setImageUrl(url);
-                        // Cloudinary url থেকে আইডি বের করে সেভ করার লজিক
                         const publicId = url.split('/').pop()?.split('.')[0] || '';
                         setCloudinaryPublicId(publicId);
                       }} 
@@ -307,7 +335,7 @@ const ManageServicesPage = () => {
                     <input
                       type="text" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)}
                       placeholder="Defaults to service title"
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs"
+                      className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs outline-none"
                     />
                   </div>
                   <div>
@@ -315,7 +343,7 @@ const ManageServicesPage = () => {
                     <input
                       type="text" value={seoKeywords} onChange={(e) => setSeoKeywords(e.target.value)}
                       placeholder="e.g. retouch, clipping path"
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs"
+                      className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs outline-none"
                     />
                   </div>
                   <div>
@@ -323,7 +351,7 @@ const ManageServicesPage = () => {
                     <textarea
                       rows={2} value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)}
                       placeholder="Short snippet for Google search..."
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs resize-none"
+                      className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs resize-none outline-none"
                     />
                   </div>
                 </div>
