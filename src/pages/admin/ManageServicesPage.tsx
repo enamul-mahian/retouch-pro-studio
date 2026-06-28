@@ -162,6 +162,26 @@ const ManageServicesPage = () => {
     setIsFormOpen(false);
   };
 
+  // কাস্টম রিঅ্যাক্ট কুইল মডিউল ও ফরম্যাটস (এডভান্সড অপশনস সহ)
+  const quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],        // বোল্ড, ইটালিক, আন্ডারলাইন, স্ট্রাইকথ্রু
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],         // হেডিংস/প্যারাগ্রাফ ড্রপডাউন
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],      // অর্ডারড ও বুলেট লিস্ট
+      [{ 'align': [] }],                                // টেক্সট এলাইনমেন্ট (Left, Center, Right, Justify)
+      ['link'],                                         // হাইপারলিঙ্ক যোগ করার অপশন
+      ['clean']                                         // ফরম্যাটিং ইরেজ বা ক্লিয়ার করার অপশন
+    ]
+  };
+
+  const quillFormats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike',
+    'list', 'bullet',
+    'align',
+    'link'
+  ];
+
   return (
     <div className="p-6 max-w-7xl mx-auto font-sans">
       <Helmet>
@@ -171,7 +191,7 @@ const ManageServicesPage = () => {
       {/* কাস্টম সিএসএস স্টাইলব্লক - রিঅ্যাক্ট কুইল এডিটরের ডার্ক মোড কালার ফিক্স করার জন্য */}
       <style>{`
         .ql-editor {
-          color: #f8fafc !important; /* text-slate-50 (ডার্ক মোডে লেখার কালার সাদা) */
+          color: #f8fafc !important; /* text-slate-50 */
           font-family: inherit;
           font-size: 14px;
         }
@@ -184,7 +204,7 @@ const ManageServicesPage = () => {
           background-color: #0f172a !important; /* bg-slate-900 */
         }
         .dark .ql-snow .ql-stroke {
-          stroke: #94a3b8 !important; /* slate-400 (আইকনের কালার হালকা করার জন্য) */
+          stroke: #94a3b8 !important; /* slate-400 */
         }
         .dark .ql-snow .ql-fill {
           fill: #94a3b8 !important;
@@ -289,6 +309,8 @@ const ManageServicesPage = () => {
                       theme="snow" 
                       value={fullDescription} 
                       onChange={setFullDescription}
+                      modules={quillModules}
+                      formats={quillFormats}
                       className="bg-white dark:bg-slate-800 rounded-xl overflow-hidden min-h-[150px]"
                     />
                   </div>
