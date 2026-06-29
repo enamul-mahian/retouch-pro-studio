@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Search, FileText, User, MessageSquare, Download, CheckCircle2, Loader2, X } from 'lucide-react';
+import { Search, FileText, User, MessageSquare, Download, CheckCircle2, Loader2, X, Calendar } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { getAllQuotes, updateQuoteStatus, createOrderFromQuote, calculateQuoteStats } from '../../services/quoteService';
 import type { QuoteRequest, QuoteStatus } from '../../types/quote.types';
@@ -10,7 +10,6 @@ const ManageQuotesPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedQuote, setSelectedQuote] = useState<QuoteRequest | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [adminNote, setAdminNote] = useState('');
   const [price, setPrice] = useState(0);
 
   const fetchQuotes = async () => {
@@ -31,7 +30,6 @@ const ManageQuotesPage = () => {
       toast.error('Please set a price greater than 0.');
       return;
     }
-    
     try {
       await createOrderFromQuote(selectedQuote, price);
       await updateQuoteStatus(selectedQuote.id!, 'approved', `Price set: $${price}`);
@@ -40,6 +38,14 @@ const ManageQuotesPage = () => {
       fetchQuotes();
     } catch (error) {
       toast.error('Failed to create order.');
+    }
+  };
+
+  const getStatusClass = (status: QuoteStatus) => {
+    switch(status) {
+      case 'approved': return 'bg-green-100 text-green-700';
+      case 'pending': return 'bg-yellow-100 text-yellow-700';
+      default: return 'bg-blue-100 text-blue-700';
     }
   };
   
@@ -53,28 +59,28 @@ const ManageQuotesPage = () => {
         <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Quote Requests</h1>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        {/* Stat Cards */}
-      </div>
-
-      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border dark:border-slate-800">
-        <table className="w-full">
-          <thead className="bg-slate-50 dark:bg-slate-800 text-xs uppercase text-slate-500">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border dark:border-slate-800 overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 dark:bg-slate-800/50 text-xs uppercase text-slate-500 dark:text-slate-400">
             <tr>
-              <th className="p-4">Client</th>
-              <th className="p-4">Service</th>
-              <th className="p-4">Status</th>
+              <th className="p-4 text-left">Client</th>
+              <th className="p-4 text-left">Service</th>
+              <th className="p-4 text-left">Status</th>
               <th className="p-4"></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y dark:divide-slate-800">
             {quotes.map(quote => (
-              <tr key={quote.id} className="border-t dark:border-slate-800">
-                <td className="p-4">{quote.name}</td>
+              <tr key={quote.id} className="text-slate-700 dark:text-slate-300">
+                <td className="p-4 font-semibold">{quote.name}</td>
                 <td className="p-4">{quote.serviceType}</td>
-                <td className="p-4">{quote.status}</td>
+                <td className="p-4">
+                  <span className={`px-2 py-1 text-xs font-bold rounded-full ${getStatusClass(quote.status)}`}>
+                    {quote.status}
+                  </span>
+                </td>
                 <td className="p-4 text-right">
-                  <button onClick={() => { setSelectedQuote(quote); setPrice(0); setIsModalOpen(true); }} className="bg-blue-500 text-white px-3 py-1 rounded">View</button>
+                  <button onClick={() => { setSelectedQuote(quote); setPrice(0); setIsModalOpen(true); }} className="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs font-bold">View</button>
                 </td>
               </tr>
             ))}
