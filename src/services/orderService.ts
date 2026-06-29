@@ -8,11 +8,10 @@ export const getUserOrders = async (clientId: string): Promise<Order[]> => {
   try {
     const ordersRef = collection(db, ORDER_COLLECTION);
     
-    // এখানে আমরা userId এর বদলে clientId দিয়ে খুঁজছি, যা আপনার সমস্যার সমাধান করবে
+    // orderBy বাদ দিয়ে শুধু clientId দিয়ে ডাটা ফিল্টার করা হলো
     const q = query(
       ordersRef, 
-      where('clientId', '==', clientId), 
-      orderBy('createdAt', 'desc')
+      where('clientId', '==', clientId)
     );
 
     const querySnapshot = await getDocs(q);
@@ -26,6 +25,9 @@ export const getUserOrders = async (clientId: string): Promise<Order[]> => {
         createdAt: data.createdAt?.toDate?.() || data.createdAt,
       } as Order);
     });
+
+    // জাভাস্ক্রিপ্ট দিয়ে তারিখ অনুযায়ী নতুন থেকে পুরোনো ক্রমে সাজানো হচ্ছে
+    orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     return orders;
   } catch (error) {
