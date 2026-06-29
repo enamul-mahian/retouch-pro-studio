@@ -62,17 +62,16 @@ const QuoteRequestForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ফাইল আপলোড শেষ হলে এই ফাংশনটি কল হবে
   const handleUploadComplete = (urls: string[]) => {
     setUploadedFileUrls(urls || []);
-    console.log("Files uploaded successfully to state:", urls);
+    console.log("Files uploaded to state:", urls);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.name || !formData.email || !formData.serviceType || !formData.description) {
-      toast.error('দয়া করে প্রয়োজনীয় সব তথ্য দিন।');
+      toast.error('দয়া করে সব বাধ্যতামূলক (*) তথ্য পূরণ করুন।');
       return;
     }
 
@@ -80,7 +79,10 @@ const QuoteRequestForm = () => {
     const loadingToast = toast.loading('আপনার রিকোয়েস্টটি পাঠানো হচ্ছে...');
 
     try {
-      // ফায়ারস্টোর সেভ করার আগে প্রতিটি ফিল্ড চেক করে undefined ভ্যালু দূর করা হলো
+      // ফায়ারবেসের এরর দূর করার জন্য Array থেকে undefined বা null ভ্যালু মুছে ফেলা হচ্ছে
+      const safeFileUrls = (uploadedFileUrls || []).filter(url => url !== undefined && url !== null && url !== "");
+
+      // ডাটা অবজেক্ট তৈরি
       const submissionData = {
         name: formData.name || '',
         email: formData.email || '',
@@ -89,16 +91,16 @@ const QuoteRequestForm = () => {
         quantity: formData.quantity || '1',
         deadline: formData.deadline || '24 Hours',
         description: formData.description || '',
-        fileUrls: uploadedFileUrls || [], // নিশ্চিত করা হলো এটি যেন undefined না হয়
+        fileUrls: safeFileUrls, // ক্লিন করা অ্যারেটি এখানে দেওয়া হলো
         userId: user?.uid || 'guest',
         status: 'pending',
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       };
 
-      console.log("Submitting sanitized data:", submissionData);
+      console.log("Submitting perfectly sanitized data:", submissionData);
 
-      // ফায়ারস্টোরে ডাটা সেভ করা
+      // ফায়ারস্টোরে ডাটা সেভ
       const docRef = await addDoc(collection(db, 'quoteRequests'), submissionData);
       console.log("Document successfully written with ID: ", docRef.id);
 
@@ -135,105 +137,73 @@ const QuoteRequestForm = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       
-      {/* কন্টাক্ট ইনফরমেশন */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-1.5">
           <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
             <User size={16} className="text-primary-500" /> Full Name *
           </label>
           <input
-            type="text"
-            name="name"
-            required
-            value={formData.name || ''}
-            onChange={handleChange}
+            type="text" name="name" required value={formData.name || ''} onChange={handleChange}
             className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none text-sm text-slate-900 dark:text-white"
-            placeholder="John Doe"
+            placeholder="Enamul Alam"
           />
         </div>
-
         <div className="space-y-1.5">
           <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
             <Mail size={16} className="text-primary-500" /> Email Address *
           </label>
           <input
-            type="email"
-            name="email"
-            required
-            value={formData.email || ''}
-            onChange={handleChange}
+            type="email" name="email" required value={formData.email || ''} onChange={handleChange}
             className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none text-sm text-slate-900 dark:text-white"
-            placeholder="john@example.com"
+            placeholder="ea.mahian@gmail.com"
           />
         </div>
       </div>
 
-      {/* প্রজেক্ট ডিটেইলস */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="space-y-1.5">
           <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
             <Layers size={16} className="text-primary-500" /> Service Type *
           </label>
           <select
-            name="serviceType"
-            required
-            value={formData.serviceType || ''}
-            onChange={handleChange}
+            name="serviceType" required value={formData.serviceType || ''} onChange={handleChange}
             className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none text-sm text-slate-900 dark:text-white"
           >
             <option value="">Select a service</option>
-            {SERVICES.map(service => (
-              <option key={service} value={service}>{service}</option>
-            ))}
+            {SERVICES.map(service => <option key={service} value={service}>{service}</option>)}
           </select>
         </div>
-
         <div className="space-y-1.5">
           <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
             <Hash size={16} className="text-primary-500" /> Quantity
           </label>
           <input
-            type="number"
-            name="quantity"
-            value={formData.quantity || ''}
-            onChange={handleChange}
+            type="number" name="quantity" value={formData.quantity || ''} onChange={handleChange}
             className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none text-sm text-slate-900 dark:text-white"
-            placeholder="e.g. 100"
           />
         </div>
-
         <div className="space-y-1.5">
           <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
             <Calendar size={16} className="text-primary-500" /> Deadline
           </label>
           <input
-            type="text"
-            name="deadline"
-            value={formData.deadline || ''}
-            onChange={handleChange}
+            type="text" name="deadline" value={formData.deadline || ''} onChange={handleChange}
             className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none text-sm text-slate-900 dark:text-white"
-            placeholder="e.g. 24 Hours"
           />
         </div>
       </div>
 
-      {/* মেসেজ সেকশন */}
       <div className="space-y-1.5">
         <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
           <MessageSquare size={16} className="text-primary-500" /> Project Description *
         </label>
         <textarea
-          name="description"
-          required
-          rows={4}
-          value={formData.description || ''}
-          onChange={handleChange}
+          name="description" required rows={4} value={formData.description || ''} onChange={handleChange}
           className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none text-sm text-slate-900 dark:text-white resize-none"
-          placeholder="Please describe your instructions..."
+          placeholder="Describe your instructions..."
         />
       </div>
 
-      {/* ফাইল আপলোড কম্পোনেন্ট */}
       <div className="space-y-2">
         <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
           <FileCheck size={16} className="text-primary-500" /> Upload Sample Files
@@ -241,28 +211,13 @@ const QuoteRequestForm = () => {
         <FileUpload onUploadComplete={handleUploadComplete} maxFiles={10} />
       </div>
 
-      {/* সাবমিট বাটন */}
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-bold transition-all shadow-premium hover:shadow-primary/40 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+        className="w-full py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-bold transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-70"
       >
-        {isSubmitting ? (
-          <>
-            <Loader2 size={20} className="animate-spin" />
-            Submitting Quote Request...
-          </>
-        ) : (
-          <>
-            Submit Quote Request
-            <Send size={18} />
-          </>
-        )}
+        {isSubmitting ? <><Loader2 size={20} className="animate-spin" /> Submitting...</> : <><Send size={18} /> Submit Quote Request</>}
       </button>
-
-      <p className="text-[11px] text-slate-400 text-center leading-relaxed">
-        Our team will analyze your files and send you a custom price quote shortly.
-      </p>
     </form>
   );
 };
